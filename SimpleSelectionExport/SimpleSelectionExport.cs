@@ -50,20 +50,10 @@ namespace SimpleSelectionExport
 
         public override bool Initialize(IPluginHost host)
         {
-            if (host == null) return false; // Fail; we need the host
+            if (host == null) return false;
             m_host = host;
 
-            return true; // Initialization successful
-        }
-
-        /// <summary>
-        /// The <c>Terminate</c> method is called by KeePass when
-        /// you should free all resources, close files/streams,
-        /// remove event handlers, etc.
-        /// </summary>
-        public override void Terminate()
-        {
-
+            return true;
         }
 
         public override ToolStripMenuItem GetMenuItem(PluginMenuType t)
@@ -133,38 +123,40 @@ namespace SimpleSelectionExport
                 {
                     using (var streamWriter = new StreamWriter(stream))
                     {
+                        var path = ((FileStream)streamWriter.BaseStream).Name;
                         if (fmt == ExportFormats.Text)
                         {
                             foreach (PwEntry entry in selectedPwEntries)
                             {
 
                                 var simplified = GetExportRecordFromEntry(entry);
-                                streamWriter.WriteLine("Title: {0}", simplified.Title);
-                                streamWriter.WriteLine("Username: {0}", simplified.Username);
-                                streamWriter.WriteLine("Password: {0}", simplified.Password);
-                                streamWriter.WriteLine("URL: {0}", simplified.Url);
-                                streamWriter.WriteLine("Notes: {0}\n\n\n", simplified.Notes);
-                                streamWriter.WriteLine();
-                                streamWriter.WriteLine("--------------------------------------------------------------");
-                                streamWriter.WriteLine();
-                            }
-                        }
+                                var textPattern = $@"Title: {simplified.Title}
+Username: {simplified.Username}
+Password: {simplified.Password}
+Url: {simplified.Url}
+Notes: {simplified.Notes}
+----------------------------------------------------------
+";
 
-                        else
-                        {
+                                streamWriter.WriteLine(textPattern);
+                            }
+                        } else
+                        {   
                             // Assume CSV since we currently have just two options
                             using (CsvWriter csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture))
                             {
                                 var records = new List<BasicExportEntry>();
+                                
                                 foreach (PwEntry entry in selectedPwEntries)
                                 {
                                     records.Add(GetExportRecordFromEntry(entry));
                                 }
 
                                 csvWriter.WriteRecords(records);
+                                
                             }
                         }
-                        MessageService.ShowInfo(String.Format("Export to {0} completed.", ((FileStream)streamWriter.BaseStream).Name));
+                        MessageService.ShowInfo(String.Format("Export to {0} completed.", path));
                     }
                 }
             }
