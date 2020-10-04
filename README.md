@@ -1,4 +1,5 @@
 # SimpleSelectionExport
+[![Github All Releases](https://img.shields.io/github/downloads/markjszy/SimpleSelectionExport/total)]
 
 SimpleSelectionExport is a [KeePass2](https://keepass.info) plugin which allows you to export basic entry 
 information to flat text files. It's useful when you want to send a quick overview of an arbitrary set of 
