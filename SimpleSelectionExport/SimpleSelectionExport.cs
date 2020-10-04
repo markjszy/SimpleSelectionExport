@@ -31,10 +31,6 @@ using KeePassLib.Utility;
 
 using CsvHelper;
 
-// The namespace name must be the same as the file name of the
-// plugin without its extension.
-// For example, if you compile a plugin 'SamplePlugin.dll',
-// the namespace must be named 'SamplePlugin'.
 namespace SimpleSelectionExport
 {
 
